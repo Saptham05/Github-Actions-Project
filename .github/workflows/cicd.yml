@@ -97,7 +97,7 @@ jobs:
 
       - name: Generate Sonar Report (PDF & DOCX)
         run: |
-          rm -rf sonar-report
+          mkdir -p sonar-report
           ls -la
           java -jar sonar-cnes-report.jar \
             -s "${{ vars.SONAR_HOST_URL }}" \
