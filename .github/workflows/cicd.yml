@@ -76,5 +76,34 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+   export-report:
+    name: Export Sonar Report & Send to Teams
+    needs: sonar-analysis
+    runs-on: ubuntu-latest
 
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Download sonar-cnes-report.jar
+        run: |
+          curl -L -o sonar-cnes-report.jar https://github.com/cnescatlab/sonar-cnes-report/releases/download/4.2.0/sonar-cnes-report-4.2.0.jar
+      - name: Generate Sonar Report (PDF & DOCX)
+        run: |
+          java -jar sonar-cnes-report.jar \
+            -s "${{ vars.SONAR_HOST_URL }}" \
+            -t "${{ secrets.SONAR_TOKEN }}" \
+            -p "HHSHAW01_01" \
+            -f "pdf,docx" \
+            -o "sonar-report"
+      - name: Debug Check if sonar-report.pdf exists
+        run: |
+          echo "Verifying sonar-report files..."
+          ls -la sonar-report || echo "sonar-report directory not found"
   
