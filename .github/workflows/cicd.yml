@@ -101,7 +101,7 @@ jobs:
           java -jar sonar-cnes-report.jar \
             -s "${{ vars.SONAR_HOST_URL }}" \
             -t "${{ secrets.SONAR_TOKEN }}" \
-            -p "HHSHAW01_01" \
+            -p "GC-Bank" \
             -f "pdf,docx" \
             -o "sonar-report"
 
